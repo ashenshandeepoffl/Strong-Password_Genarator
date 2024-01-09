@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strong Password Generator</title>
+    <link rel="stylesheet" href="Index.css">
+</head>
+<body>
+
+    <h1>Strong Password Generator</h1>
+
+    <label for="length">Password Length:</label>
+    <input type="number" id="length" min="6" max="50" value="12">
+
+    <br>
+
+    <label for="includeNumbers">Include Numbers:</label>
+    <input type="checkbox" id="includeNumbers" checked>
+
+    <label for="includeLowercase">Include Lowercase Characters:</label>
+    <input type="checkbox" id="includeLowercase" checked>
+
+    <label for="includeUppercase">Include Uppercase Characters:</label>
+    <input type="checkbox" id="includeUppercase" checked>
+
+    <br>
+
+    <label for="beginWithLetter">Begin With a Letter:</label>
+    <input type="checkbox" id="beginWithLetter">
+
+    <label for="includeSymbols">Include Symbols:</label>
+    <input type="checkbox" id="includeSymbols">
+
+    <label for="noSimilarChars">No Similar Characters:</label>
+    <input type="checkbox" id="noSimilarChars">
+
+    <br>
+
+    <label for="noDuplicateChars">No Duplicate Characters:</label>
+    <input type="checkbox" id="noDuplicateChars">
+
+    <label for="noSequentialChars">No Sequential Characters:</label>
+    <input type="checkbox" id="noSequentialChars">
+
+    <br>
+
+    <label for="autoGenerate">Auto Generate On The First Call:</label>
+    <input type="checkbox" id="autoGenerate" checked>
+
+    <br>
+
+    <label for="quantity">Quantity (1 to 1000 password generations):</label>
+    <input type="number" id="quantity" min="1" max="1000" value="1">
+
+    <br>
+
+    <button onclick="generatePasswords()">Generate Passwords</button>
+
+    <table id="passwordTable">
+        <thead>
+            <tr>
+                <th>Password</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Passwords will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        function generatePasswords() {
+            const length = document.getElementById("length").value;
+            const includeNumbers = document.getElementById("includeNumbers").checked;
+            const includeLowercase = document.getElementById("includeLowercase").checked;
+            const includeUppercase = document.getElementById("includeUppercase").checked;
+            const beginWithLetter = document.getElementById("beginWithLetter").checked;
+            const includeSymbols = document.getElementById("includeSymbols").checked;
+            const noSimilarChars = document.getElementById("noSimilarChars").checked;
+            const noDuplicateChars = document.getElementById("noDuplicateChars").checked;
+            const noSequentialChars = document.getElementById("noSequentialChars").checked;
+            const autoGenerate = document.getElementById("autoGenerate").checked;
+            const quantity = document.getElementById("quantity").value;
+
+            const passwordTable = document.getElementById("passwordTable");
+            const tbody = passwordTable.querySelector("tbody");
+            tbody.innerHTML = ""; // Clear previous passwords
+
+            for (let i = 0; i < quantity; i++) {
+                const password = generatePassword(length, includeNumbers, includeLowercase, includeUppercase, beginWithLetter, includeSymbols, noSimilarChars, noDuplicateChars, noSequentialChars);
+                const row = tbody.insertRow();
+                const cell = row.insertCell(0);
+                cell.textContent = password;
+            }
+
+            if (autoGenerate) {
+                // If autoGenerate is checked, reset the checkbox for the next call
+                document.getElementById("autoGenerate").checked = false;
+            }
+        }
+
+        function generatePassword(length, includeNumbers, includeLowercase, includeUppercase, beginWithLetter, includeSymbols, noSimilarChars, noDuplicateChars, noSequentialChars) {
+            // Password generation logic goes here (you can use any algorithm or library)
+            // For simplicity, let's use a basic example here
+            const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+            let password = "";
+            let lastChar = "";
+
+            while (password.length < length) {
+                let randomChar = chars[Math.floor(Math.random() * chars.length)];
+
+                if (noSimilarChars) {
+                    // Ensure the character is not similar to the last one
+                    while (randomChar === lastChar) {
+                        randomChar = chars[Math.floor(Math.random() * chars.length)];
+                    }
+                }
+
+                password += randomChar;
+                lastChar = randomChar;
+            }
+
+            return password;
+        }
+    </script>
+</body>
+</html>
